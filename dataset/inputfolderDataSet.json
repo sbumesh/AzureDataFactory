@@ -1,0 +1,28 @@
+{
+	"name": "inputfolderDataSet",
+	"properties": {
+		"linkedServiceName": {
+			"referenceName": "linkedServiceForStorage",
+			"type": "LinkedServiceReference"
+		},
+		"parameters": {
+			"inputFolfrt": {
+				"type": "string",
+				"defaultValue": "input"
+			}
+		},
+		"annotations": [],
+		"type": "Binary",
+		"typeProperties": {
+			"location": {
+				"type": "AzureBlobStorageLocation",
+				"folderPath": {
+					"value": "@dataset().inputFolfrt",
+					"type": "Expression"
+				},
+				"container": "container1"
+			}
+		}
+	},
+	"type": "Microsoft.DataFactory/factories/datasets"
+}

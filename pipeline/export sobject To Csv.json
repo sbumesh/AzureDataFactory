@@ -1,0 +1,83 @@
+{
+	"name": "export sobject To Csv",
+	"properties": {
+		"activities": [
+			{
+				"name": "export Sobject to Csv",
+				"type": "Copy",
+				"dependsOn": [],
+				"policy": {
+					"timeout": "0.12:00:00",
+					"retry": 0,
+					"retryIntervalInSeconds": 30,
+					"secureOutput": false,
+					"secureInput": false
+				},
+				"userProperties": [],
+				"typeProperties": {
+					"source": {
+						"type": "SalesforceSource",
+						"query": "select Name,CurrencyCode__c from amaCurrency__c",
+						"readBehavior": "query"
+					},
+					"sink": {
+						"type": "DelimitedTextSink",
+						"storeSettings": {
+							"type": "AzureBlobStorageWriteSettings"
+						},
+						"formatSettings": {
+							"type": "DelimitedTextWriteSettings",
+							"quoteAllText": true,
+							"fileExtension": ".txt"
+						}
+					},
+					"enableStaging": false,
+					"translator": {
+						"type": "TabularTranslator",
+						"typeConversion": true,
+						"typeConversionSettings": {
+							"allowDataTruncation": true,
+							"treatBooleanAsNumber": false
+						}
+					}
+				},
+				"inputs": [
+					{
+						"referenceName": "SalesforceObject1",
+						"type": "DatasetReference",
+						"parameters": {
+							"table": {
+								"value": "@pipeline().parameters.tableName",
+								"type": "Expression"
+							}
+						}
+					}
+				],
+				"outputs": [
+					{
+						"referenceName": "saelsforceCsv",
+						"type": "DatasetReference",
+						"parameters": {
+							"pCsvFileName": {
+								"value": "@concat(pipeline().parameters.tableName, '.csv')",
+								"type": "Expression"
+							}
+						}
+					}
+				]
+			}
+		],
+		"parameters": {
+			"tableName": {
+				"type": "string",
+				"defaultValue": "amaCurrency__c"
+			}
+		},
+		"folder": {
+			"name": "salesforce"
+		},
+		"annotations": [],
+		"lastPublishTime": "2024-01-11T03:16:28Z"
+	},
+	"type": "Microsoft.DataFactory/factories/pipelines"
+}

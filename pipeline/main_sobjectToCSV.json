@@ -1,0 +1,58 @@
+{
+	"name": "main_sobjectToCSV",
+	"properties": {
+		"activities": [
+			{
+				"name": "ForEach1",
+				"description": "",
+				"type": "ForEach",
+				"dependsOn": [],
+				"userProperties": [],
+				"typeProperties": {
+					"items": {
+						"value": "@variables('folderArray')",
+						"type": "Expression"
+					},
+					"isSequential": true,
+					"activities": [
+						{
+							"name": "Execute Pipeline1",
+							"type": "ExecutePipeline",
+							"dependsOn": [],
+							"userProperties": [],
+							"typeProperties": {
+								"pipeline": {
+									"referenceName": "export sobject To Csv",
+									"type": "PipelineReference"
+								},
+								"waitOnCompletion": true,
+								"parameters": {
+									"tableName": {
+										"value": "@item()",
+										"type": "Expression"
+									}
+								}
+							}
+						}
+					]
+				}
+			}
+		],
+		"variables": {
+			"folderArray": {
+				"type": "Array",
+				"defaultValue": [
+					"amaAircraft__c",
+					"amaCarrier__c",
+					"amaCurrency__c"
+				]
+			}
+		},
+		"folder": {
+			"name": "salesforce"
+		},
+		"annotations": [],
+		"lastPublishTime": "2024-01-11T01:19:39Z"
+	},
+	"type": "Microsoft.DataFactory/factories/pipelines"
+}

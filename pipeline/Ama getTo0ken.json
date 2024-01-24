@@ -1,0 +1,239 @@
+{
+	"name": "Ama getTo0ken",
+	"properties": {
+		"activities": [
+			{
+				"name": "Web1",
+				"type": "WebActivity",
+				"dependsOn": [],
+				"policy": {
+					"timeout": "0.12:00:00",
+					"retry": 0,
+					"retryIntervalInSeconds": 30,
+					"secureOutput": false,
+					"secureInput": false
+				},
+				"userProperties": [],
+				"typeProperties": {
+					"method": "POST",
+					"headers": {
+						"Content-Type": "application/x-www-form-urlencoded"
+					},
+					"url": {
+						"value": "@pipeline().parameters.url",
+						"type": "Expression"
+					},
+					"body": {
+						"value": "@pipeline().parameters.body",
+						"type": "Expression"
+					}
+				}
+			},
+			{
+				"name": "Set variable entire Json string",
+				"type": "SetVariable",
+				"dependsOn": [
+					{
+						"activity": "Web1",
+						"dependencyConditions": [
+							"Succeeded"
+						]
+					}
+				],
+				"policy": {
+					"secureOutput": false,
+					"secureInput": false
+				},
+				"userProperties": [],
+				"typeProperties": {
+					"variableName": "jsonString",
+					"value": {
+						"value": "@{activity('Web1').output}",
+						"type": "Expression"
+					}
+				}
+			},
+			{
+				"name": "set variable accesstoken",
+				"type": "SetVariable",
+				"dependsOn": [
+					{
+						"activity": "Web1",
+						"dependencyConditions": [
+							"Succeeded"
+						]
+					}
+				],
+				"policy": {
+					"secureOutput": false,
+					"secureInput": false
+				},
+				"userProperties": [],
+				"typeProperties": {
+					"variableName": "AccessToken",
+					"value": {
+						"value": "@activity('Web1').output.access_token",
+						"type": "Expression"
+					}
+				}
+			},
+			{
+				"name": "shopping",
+				"type": "WebActivity",
+				"dependsOn": [
+					{
+						"activity": "set variable accesstoken",
+						"dependencyConditions": [
+							"Completed"
+						]
+					}
+				],
+				"policy": {
+					"timeout": "0.12:00:00",
+					"retry": 0,
+					"retryIntervalInSeconds": 30,
+					"secureOutput": false,
+					"secureInput": false
+				},
+				"userProperties": [],
+				"typeProperties": {
+					"method": "GET",
+					"headers": {
+						"Authorization": {
+							"value": "@concat('Bearer ',variables('AccessToken'))",
+							"type": "Expression"
+						}
+					},
+					"url": {
+						"value": "https://test.api.amadeus.com/v1/shopping/flight-destinations?origin=PAR&maxPrice=200",
+						"type": "Expression"
+					},
+					"body": {
+						"value": "@pipeline().parameters.body",
+						"type": "Expression"
+					}
+				}
+			},
+			{
+				"name": "copy Json output",
+				"type": "SetVariable",
+				"dependsOn": [
+					{
+						"activity": "shopping",
+						"dependencyConditions": [
+							"Succeeded"
+						]
+					}
+				],
+				"policy": {
+					"secureOutput": false,
+					"secureInput": false
+				},
+				"userProperties": [],
+				"typeProperties": {
+					"variableName": "jsonString",
+					"value": {
+						"value": "@{activity('shopping').output}",
+						"type": "Expression"
+					}
+				}
+			},
+			{
+				"name": "Set variable1",
+				"type": "SetVariable",
+				"state": "Inactive",
+				"onInactiveMarkAs": "Succeeded",
+				"dependsOn": [
+					{
+						"activity": "shopping",
+						"dependencyConditions": [
+							"Succeeded"
+						]
+					}
+				],
+				"policy": {
+					"secureOutput": false,
+					"secureInput": false
+				},
+				"userProperties": [],
+				"typeProperties": {
+					"variableName": "jsonString",
+					"value": {
+						"value": "@activity('shopping').output.data[0].departureDate",
+						"type": "Expression"
+					}
+				}
+			},
+			{
+				"name": "Execute Pipeline1",
+				"type": "ExecutePipeline",
+				"dependsOn": [
+					{
+						"activity": "copy Json output",
+						"dependencyConditions": [
+							"Succeeded"
+						]
+					}
+				],
+				"userProperties": [],
+				"typeProperties": {
+					"pipeline": {
+						"referenceName": "utilCopyJsonToFile",
+						"type": "PipelineReference"
+					},
+					"waitOnCompletion": true,
+					"parameters": {
+						"pOutfile": "shopping.json"
+					}
+				}
+			},
+			{
+				"name": "copy tokens json",
+				"type": "ExecutePipeline",
+				"dependsOn": [
+					{
+						"activity": "Set variable entire Json string",
+						"dependencyConditions": [
+							"Succeeded"
+						]
+					}
+				],
+				"userProperties": [],
+				"typeProperties": {
+					"pipeline": {
+						"referenceName": "utilCopyJsonToFile",
+						"type": "PipelineReference"
+					},
+					"waitOnCompletion": true,
+					"parameters": {
+						"pOutfile": "access.json"
+					}
+				}
+			}
+		],
+		"parameters": {
+			"url": {
+				"type": "string",
+				"defaultValue": "https://test.api.amadeus.com/v1/security/oauth2/token"
+			},
+			"body": {
+				"type": "string",
+				"defaultValue": "grant_type=client_credentials&client_id=R1wS6AAR7l2HGFIFbvpGV79YTKYyylgw&client_secret=cDcvwB3PqbotWZcG"
+			}
+		},
+		"variables": {
+			"AccessToken": {
+				"type": "String"
+			},
+			"jsonString": {
+				"type": "String"
+			}
+		},
+		"folder": {
+			"name": "Amaedeus"
+		},
+		"annotations": [],
+		"lastPublishTime": "2024-01-12T10:36:47Z"
+	},
+	"type": "Microsoft.DataFactory/factories/pipelines"
+}

@@ -1,0 +1,26 @@
+{
+	"name": "parseJsonFile",
+	"properties": {
+		"activities": [
+			{
+				"name": "Execute Pipeline1",
+				"type": "ExecutePipeline",
+				"dependsOn": [],
+				"userProperties": [],
+				"typeProperties": {
+					"pipeline": {
+						"referenceName": "utilCopyJsonToFile",
+						"type": "PipelineReference"
+					},
+					"waitOnCompletion": true,
+					"parameters": {
+						"pOutfile": "shopping.json"
+					}
+				}
+			}
+		],
+		"annotations": [],
+		"lastPublishTime": "2024-01-12T10:36:47Z"
+	},
+	"type": "Microsoft.DataFactory/factories/pipelines"
+}

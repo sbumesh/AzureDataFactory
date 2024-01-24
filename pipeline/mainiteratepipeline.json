@@ -1,0 +1,54 @@
+{
+	"name": "mainiteratepipeline",
+	"properties": {
+		"activities": [
+			{
+				"name": "ForEach1",
+				"description": "",
+				"type": "ForEach",
+				"dependsOn": [],
+				"userProperties": [],
+				"typeProperties": {
+					"items": {
+						"value": "@variables('folderArray')",
+						"type": "Expression"
+					},
+					"isSequential": true,
+					"activities": [
+						{
+							"name": "Execute Pipeline1",
+							"type": "ExecutePipeline",
+							"dependsOn": [],
+							"userProperties": [],
+							"typeProperties": {
+								"pipeline": {
+									"referenceName": "iterateFilename",
+									"type": "PipelineReference"
+								},
+								"waitOnCompletion": true,
+								"parameters": {
+									"folder": {
+										"value": "@item()",
+										"type": "Expression"
+									}
+								}
+							}
+						}
+					]
+				}
+			}
+		],
+		"variables": {
+			"folderArray": {
+				"type": "Array",
+				"defaultValue": [
+					"input",
+					"output"
+				]
+			}
+		},
+		"annotations": [],
+		"lastPublishTime": "2024-01-09T15:45:53Z"
+	},
+	"type": "Microsoft.DataFactory/factories/pipelines"
+}

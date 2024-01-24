@@ -1,0 +1,34 @@
+{
+	"name": "DelimitedText1",
+	"properties": {
+		"linkedServiceName": {
+			"referenceName": "asmadeuslinikedserive",
+			"type": "LinkedServiceReference"
+		},
+		"parameters": {
+			"outfile": {
+				"type": "string",
+				"defaultValue": "out.json"
+			}
+		},
+		"annotations": [],
+		"type": "DelimitedText",
+		"typeProperties": {
+			"location": {
+				"type": "AzureBlobStorageLocation",
+				"fileName": {
+					"value": "@dataset().outfile",
+					"type": "Expression"
+				},
+				"folderPath": "inputJson",
+				"container": "amaededuscontainer"
+			},
+			"columnDelimiter": ",",
+			"escapeChar": "\\",
+			"firstRowAsHeader": true,
+			"quoteChar": "\""
+		},
+		"schema": []
+	},
+	"type": "Microsoft.DataFactory/factories/datasets"
+}
