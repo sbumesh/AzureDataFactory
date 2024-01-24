@@ -1,0 +1,581 @@
+{
+	"$schema": "http://schema.management.azure.com/schemas/2015-01-01/deploymentTemplate.json#",
+	"contentVersion": "1.0.0.0",
+	"parameters": {
+		"factoryName": {
+			"type": "string",
+			"metadata": "Data Factory name",
+			"defaultValue": "Amaedeus"
+		},
+		"AzureBlobStorage1_connectionString": {
+			"type": "secureString",
+			"metadata": "Secure string for 'connectionString' of 'AzureBlobStorage1'"
+		}
+	},
+	"variables": {
+		"factoryId": "[concat('Microsoft.DataFactory/factories/', parameters('factoryName'))]"
+	},
+	"resources": [
+		{
+			"name": "[concat(parameters('factoryName'), '/AzureBlobStorage1')]",
+			"type": "Microsoft.DataFactory/factories/linkedServices",
+			"apiVersion": "2018-06-01",
+			"properties": {
+				"annotations": [],
+				"type": "AzureBlobStorage",
+				"typeProperties": {
+					"connectionString": "[parameters('AzureBlobStorage1_connectionString')]"
+				}
+			},
+			"dependsOn": []
+		},
+		{
+			"name": "[concat(parameters('factoryName'), '/InputJsonFolder')]",
+			"type": "Microsoft.DataFactory/factories/datasets",
+			"apiVersion": "2018-06-01",
+			"properties": {
+				"linkedServiceName": {
+					"referenceName": "AzureBlobStorage1",
+					"type": "LinkedServiceReference"
+				},
+				"parameters": {
+					"pJsonFile": {
+						"type": "string"
+					}
+				},
+				"annotations": [],
+				"type": "Binary",
+				"typeProperties": {
+					"location": {
+						"type": "AzureBlobStorageLocation",
+						"fileName": "out1234.json",
+						"folderPath": "inputJson",
+						"container": "amaededuscontainer"
+					}
+				}
+			},
+			"dependsOn": [
+				"[concat(variables('factoryId'), '/linkedServices/AzureBlobStorage1')]"
+			]
+		},
+		{
+			"name": "[concat(parameters('factoryName'), '/Json1')]",
+			"type": "Microsoft.DataFactory/factories/datasets",
+			"apiVersion": "2018-06-01",
+			"properties": {
+				"linkedServiceName": {
+					"referenceName": "AzureBlobStorage1",
+					"type": "LinkedServiceReference"
+				},
+				"parameters": {
+					"pfilename": {
+						"type": "string",
+						"defaultValue": "key.json"
+					}
+				},
+				"annotations": [],
+				"type": "Json",
+				"typeProperties": {
+					"location": {
+						"type": "AzureBlobStorageLocation",
+						"fileName": {
+							"value": "@dataset().pfilename",
+							"type": "Expression"
+						},
+						"container": "amaededuscontainer"
+					}
+				},
+				"schema": {
+					"type": "object",
+					"properties": {
+						"meta": {
+							"type": "object",
+							"properties": {
+								"count": {
+									"type": "integer"
+								},
+								"links": {
+									"type": "object",
+									"properties": {
+										"self": {
+											"type": "string"
+										}
+									}
+								}
+							}
+						},
+						"data": {
+							"type": "array",
+							"items": {
+								"type": "object",
+								"properties": {
+									"type": {
+										"type": "string"
+									},
+									"scheduledDepartureDate": {
+										"type": "string"
+									},
+									"flightDesignator": {
+										"type": "object",
+										"properties": {
+											"carrierCode": {
+												"type": "string"
+											},
+											"flightNumber": {
+												"type": "integer"
+											}
+										}
+									},
+									"flightPoints": {
+										"type": "array",
+										"items": {
+											"type": "object",
+											"properties": {
+												"iataCode": {
+													"type": "string"
+												},
+												"departure": {
+													"type": "object",
+													"properties": {
+														"timings": {
+															"type": "array",
+															"items": {
+																"type": "object",
+																"properties": {
+																	"qualifier": {
+																		"type": "string"
+																	},
+																	"value": {
+																		"type": "string"
+																	}
+																}
+															}
+														}
+													}
+												}
+											}
+										}
+									},
+									"segments": {
+										"type": "array",
+										"items": {
+											"type": "object",
+											"properties": {
+												"boardPointIataCode": {
+													"type": "string"
+												},
+												"offPointIataCode": {
+													"type": "string"
+												},
+												"scheduledSegmentDuration": {
+													"type": "string"
+												},
+												"partnership": {
+													"type": "object",
+													"properties": {
+														"operatingFlight": {
+															"type": "object",
+															"properties": {
+																"carrierCode": {
+																	"type": "string"
+																},
+																"flightNumber": {
+																	"type": "integer"
+																}
+															}
+														}
+													}
+												}
+											}
+										}
+									},
+									"legs": {
+										"type": "array",
+										"items": {
+											"type": "object",
+											"properties": {
+												"boardPointIataCode": {
+													"type": "string"
+												},
+												"offPointIataCode": {
+													"type": "string"
+												},
+												"aircraftEquipment": {
+													"type": "object",
+													"properties": {
+														"aircraftType": {
+															"type": "string"
+														}
+													}
+												},
+												"scheduledLegDuration": {
+													"type": "string"
+												}
+											}
+										}
+									}
+								}
+							}
+						}
+					}
+				}
+			},
+			"dependsOn": [
+				"[concat(variables('factoryId'), '/linkedServices/AzureBlobStorage1')]"
+			]
+		},
+		{
+			"name": "[concat(parameters('factoryName'), '/parsedJson')]",
+			"type": "Microsoft.DataFactory/factories/datasets",
+			"apiVersion": "2018-06-01",
+			"properties": {
+				"linkedServiceName": {
+					"referenceName": "AzureBlobStorage1",
+					"type": "LinkedServiceReference"
+				},
+				"parameters": {
+					"parsedCsvtext": {
+						"type": "string",
+						"defaultValue": "out.csv"
+					}
+				},
+				"annotations": [],
+				"type": "Binary",
+				"typeProperties": {
+					"location": {
+						"type": "AzureBlobStorageLocation",
+						"folderPath": "inputJson",
+						"container": "amaededuscontainer"
+					}
+				}
+			},
+			"dependsOn": [
+				"[concat(variables('factoryId'), '/linkedServices/AzureBlobStorage1')]"
+			]
+		},
+		{
+			"name": "[concat(parameters('factoryName'), '/xcsvout')]",
+			"type": "Microsoft.DataFactory/factories/datasets",
+			"apiVersion": "2018-06-01",
+			"properties": {
+				"linkedServiceName": {
+					"referenceName": "AzureBlobStorage1",
+					"type": "LinkedServiceReference"
+				},
+				"annotations": [],
+				"type": "DelimitedText",
+				"typeProperties": {
+					"location": {
+						"type": "AzureBlobStorageLocation",
+						"fileName": "out.csv",
+						"folderPath": "inputJson",
+						"container": "amaededuscontainer"
+					},
+					"columnDelimiter": ",",
+					"escapeChar": "\\",
+					"firstRowAsHeader": true,
+					"quoteChar": ""
+				},
+				"schema": [
+					{
+						"name": "type",
+						"type": "String"
+					},
+					{
+						"name": "origin",
+						"type": "String"
+					},
+					{
+						"name": "destination",
+						"type": "String"
+					},
+					{
+						"name": "departureDate",
+						"type": "String"
+					},
+					{
+						"name": "returnDate",
+						"type": "String"
+					},
+					{
+						"name": "total",
+						"type": "String"
+					}
+				]
+			},
+			"dependsOn": [
+				"[concat(variables('factoryId'), '/linkedServices/AzureBlobStorage1')]"
+			]
+		},
+		{
+			"name": "[concat(parameters('factoryName'), '/dataflow1')]",
+			"type": "Microsoft.DataFactory/factories/dataflows",
+			"apiVersion": "2018-06-01",
+			"properties": {
+				"type": "MappingDataFlow",
+				"typeProperties": {
+					"sources": [
+						{
+							"dataset": {
+								"referenceName": "Json1",
+								"type": "DatasetReference"
+							},
+							"name": "source1"
+						}
+					],
+					"sinks": [
+						{
+							"dataset": {
+								"referenceName": "xcsvout",
+								"type": "DatasetReference"
+							},
+							"name": "sink1"
+						}
+					],
+					"transformations": [
+						{
+							"name": "flatten1"
+						}
+					],
+					"scriptLines": [
+						"source(output(",
+						"          data as (flightDesignator as (carrierCode as string, flightNumber as short), flightPoints as (arrival as (timings as (qualifier as string, value as string)[]), departure as (timings as (qualifier as string, value as string)[]), iataCode as string)[], legs as (aircraftEquipment as (aircraftType as string), boardPointIataCode as string, offPointIataCode as string, scheduledLegDuration as string)[], scheduledDepartureDate as date, segments as (boardPointIataCode as string, offPointIataCode as string, partnership as (operatingFlight as (carrierCode as string, flightNumber as short)), scheduledSegmentDuration as string)[], type as string)[],",
+						"          meta as (count as boolean, links as (self as string))",
+						"     ),",
+						"     allowSchemaDrift: true,",
+						"     validateSchema: false,",
+						"     ignoreNoFilesFound: false,",
+						"     documentForm: 'arrayOfDocuments') ~> source1",
+						"source1 foldDown(unroll(data),",
+						"     mapColumn(",
+						"          type = data.type,",
+						"          scheduledDepartureDate = data.scheduledDepartureDate,",
+						"          carrierCode = data.flightDesignator.carrierCode",
+						"     ),",
+						"     skipDuplicateMapInputs: false,",
+						"     skipDuplicateMapOutputs: false) ~> flatten1",
+						"flatten1 sink(allowSchemaDrift: true,",
+						"     validateSchema: false,",
+						"     input(",
+						"          type as string,",
+						"          origin as string,",
+						"          destination as string,",
+						"          departureDate as string,",
+						"          returnDate as string,",
+						"          total as string",
+						"     ),",
+						"     skipDuplicateMapInputs: true,",
+						"     skipDuplicateMapOutputs: true) ~> sink1"
+					]
+				}
+			},
+			"dependsOn": [
+				"[concat(variables('factoryId'), '/datasets/Json1')]",
+				"[concat(variables('factoryId'), '/datasets/xcsvout')]"
+			]
+		},
+		{
+			"name": "[concat(parameters('factoryName'), '/powerquery1')]",
+			"type": "Microsoft.DataFactory/factories/dataflows",
+			"apiVersion": "2018-06-01",
+			"properties": {
+				"type": "WranglingDataFlow",
+				"typeProperties": {
+					"sources": [
+						{
+							"name": "xcsvout",
+							"script": "source(allowSchemaDrift: true,\n\tvalidateSchema: false,\n\tignoreNoFilesFound: false) ~> xcsvout",
+							"dataset": {
+								"referenceName": "xcsvout",
+								"type": "DatasetReference"
+							}
+						}
+					],
+					"script": "section Section1;\r\nshared xcsvout = let AdfDoc = AzureStorage.BlobContents(\"https://amadeusjson.blob.core.windows.net/amaededuscontainer/inputJson/out.csv\"),Csv = Csv.Document(AdfDoc, [Delimiter = \",\", Encoding = TextEncoding.Utf8, QuoteStyle = QuoteStyle.None]), PromotedHeaders = Table.PromoteHeaders(Csv, [PromoteAllScalars = true]) in  PromotedHeaders;\r\nshared UserQuery = let Source = #\"xcsvout\" in Source;\r\nshared #\"UserQuery (2)\" = let Source = #\"xcsvout\",\r\n  #\"Removed other columns\" = Table.SelectColumns(Source, {\"departureDate\"}) in #\"Removed other columns\";\r\n",
+					"documentLocale": "en-us"
+				}
+			},
+			"dependsOn": [
+				"[concat(variables('factoryId'), '/datasets/xcsvout')]"
+			]
+		},
+		{
+			"name": "[concat(parameters('factoryName'), '/getToken')]",
+			"type": "Microsoft.DataFactory/factories/pipelines",
+			"apiVersion": "2018-06-01",
+			"properties": {
+				"activities": [
+					{
+						"name": "Copy data1",
+						"type": "Copy",
+						"dependsOn": [],
+						"policy": {
+							"timeout": "0.12:00:00",
+							"retry": 0,
+							"retryIntervalInSeconds": 30,
+							"secureOutput": false,
+							"secureInput": false
+						},
+						"userProperties": [],
+						"typeProperties": {
+							"source": {
+								"type": "JsonSource",
+								"storeSettings": {
+									"type": "AzureBlobStorageReadSettings",
+									"recursive": true,
+									"enablePartitionDiscovery": false
+								},
+								"formatSettings": {
+									"type": "JsonReadSettings"
+								}
+							},
+							"sink": {
+								"type": "DelimitedTextSink",
+								"storeSettings": {
+									"type": "AzureBlobStorageWriteSettings"
+								},
+								"formatSettings": {
+									"type": "DelimitedTextWriteSettings",
+									"quoteAllText": true,
+									"fileExtension": ".txt"
+								}
+							},
+							"enableStaging": false,
+							"translator": {
+								"type": "TabularTranslator",
+								"mappings": [
+									{
+										"source": {
+											"path": "[['type']"
+										},
+										"sink": {
+											"name": "type",
+											"type": "String"
+										}
+									},
+									{
+										"source": {
+											"path": "[['origin']"
+										},
+										"sink": {
+											"name": "origin",
+											"type": "String"
+										}
+									},
+									{
+										"source": {
+											"path": "[['destination']"
+										},
+										"sink": {
+											"name": "destination",
+											"type": "String"
+										}
+									},
+									{
+										"source": {
+											"path": "[['departureDate']"
+										},
+										"sink": {
+											"name": "departureDate",
+											"type": "Date"
+										}
+									},
+									{
+										"source": {
+											"path": "[['returnDate']"
+										},
+										"sink": {
+											"name": "returnDate",
+											"type": "Date"
+										}
+									},
+									{
+										"source": {
+											"path": "[['price']['total']"
+										},
+										"sink": {
+											"name": "total",
+											"type": "Double"
+										}
+									}
+								],
+								"collectionReference": "$['data']",
+								"mapComplexValuesToString": true
+							}
+						},
+						"inputs": [
+							{
+								"referenceName": "Json1",
+								"type": "DatasetReference",
+								"parameters": {
+									"pfilename": "key.json"
+								}
+							}
+						],
+						"outputs": [
+							{
+								"referenceName": "xcsvout",
+								"type": "DatasetReference",
+								"parameters": {}
+							}
+						]
+					},
+					{
+						"name": "Power Query1",
+						"type": "ExecuteWranglingDataflow",
+						"dependsOn": [],
+						"policy": {
+							"timeout": "0.12:00:00",
+							"retry": 0,
+							"retryIntervalInSeconds": 30,
+							"secureOutput": false,
+							"secureInput": false
+						},
+						"userProperties": [],
+						"typeProperties": {
+							"dataflow": {
+								"referenceName": "powerquery1",
+								"type": "DataFlowReference",
+								"datasetParameters": {
+									"xcsvout": {},
+									"UserQuery2xcsvout": {}
+								}
+							},
+							"staging": {},
+							"compute": {
+								"coreCount": 8,
+								"computeType": "General"
+							},
+							"queries": [
+								{
+									"queryName": "UserQuery (2)",
+									"dataflowSinks": [
+										{
+											"name": "UserQuery2xcsvout",
+											"dataset": {
+												"referenceName": "xcsvout",
+												"type": "DatasetReference",
+												"parameters": {}
+											},
+											"script": "sink(allowSchemaDrift: true,\n\tvalidateSchema: false,\n\tinput(\n\t\ttype as string,\n\t\torigin as string,\n\t\tdestination as string,\n\t\tdepartureDate as string,\n\t\treturnDate as string,\n\t\ttotal as string\n\t),\n\tskipDuplicateMapInputs: true,\n\tskipDuplicateMapOutputs: true) ~> UserQuery2xcsvout"
+										}
+									]
+								}
+							]
+						}
+					}
+				],
+				"policy": {
+					"elapsedTimeMetric": {}
+				},
+				"annotations": [],
+				"lastPublishTime": "2024-01-15T12:40:51Z"
+			},
+			"dependsOn": [
+				"[concat(variables('factoryId'), '/datasets/Json1')]",
+				"[concat(variables('factoryId'), '/datasets/xcsvout')]",
+				"[concat(variables('factoryId'), '/dataflows/powerquery1')]"
+			]
+		}
+	]
+}
