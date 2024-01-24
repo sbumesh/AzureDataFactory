@@ -1,0 +1,61 @@
+{
+	"name": "dataflow1",
+	"properties": {
+		"type": "MappingDataFlow",
+		"typeProperties": {
+			"sources": [
+				{
+					"dataset": {
+						"referenceName": "Json1",
+						"type": "DatasetReference"
+					},
+					"name": "source1"
+				}
+			],
+			"sinks": [
+				{
+					"dataset": {
+						"referenceName": "xcsvout",
+						"type": "DatasetReference"
+					},
+					"name": "sink1"
+				}
+			],
+			"transformations": [
+				{
+					"name": "flatten1"
+				}
+			],
+			"scriptLines": [
+				"source(output(",
+				"          data as (flightDesignator as (carrierCode as string, flightNumber as short), flightPoints as (arrival as (timings as (qualifier as string, value as string)[]), departure as (timings as (qualifier as string, value as string)[]), iataCode as string)[], legs as (aircraftEquipment as (aircraftType as string), boardPointIataCode as string, offPointIataCode as string, scheduledLegDuration as string)[], scheduledDepartureDate as date, segments as (boardPointIataCode as string, offPointIataCode as string, partnership as (operatingFlight as (carrierCode as string, flightNumber as short)), scheduledSegmentDuration as string)[], type as string)[],",
+				"          meta as (count as boolean, links as (self as string))",
+				"     ),",
+				"     allowSchemaDrift: true,",
+				"     validateSchema: false,",
+				"     ignoreNoFilesFound: false,",
+				"     documentForm: 'arrayOfDocuments') ~> source1",
+				"source1 foldDown(unroll(data),",
+				"     mapColumn(",
+				"          type = data.type,",
+				"          scheduledDepartureDate = data.scheduledDepartureDate,",
+				"          carrierCode = data.flightDesignator.carrierCode",
+				"     ),",
+				"     skipDuplicateMapInputs: false,",
+				"     skipDuplicateMapOutputs: false) ~> flatten1",
+				"flatten1 sink(allowSchemaDrift: true,",
+				"     validateSchema: false,",
+				"     input(",
+				"          type as string,",
+				"          origin as string,",
+				"          destination as string,",
+				"          departureDate as string,",
+				"          returnDate as string,",
+				"          total as string",
+				"     ),",
+				"     skipDuplicateMapInputs: true,",
+				"     skipDuplicateMapOutputs: true) ~> sink1"
+			]
+		}
+	}
+}

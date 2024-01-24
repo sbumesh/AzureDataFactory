@@ -1,0 +1,50 @@
+{
+	"name": "xcsvout",
+	"properties": {
+		"linkedServiceName": {
+			"referenceName": "AzureBlobStorage1",
+			"type": "LinkedServiceReference"
+		},
+		"annotations": [],
+		"type": "DelimitedText",
+		"typeProperties": {
+			"location": {
+				"type": "AzureBlobStorageLocation",
+				"fileName": "out.csv",
+				"folderPath": "inputJson",
+				"container": "amaededuscontainer"
+			},
+			"columnDelimiter": ",",
+			"escapeChar": "\\",
+			"firstRowAsHeader": true,
+			"quoteChar": ""
+		},
+		"schema": [
+			{
+				"name": "type",
+				"type": "String"
+			},
+			{
+				"name": "origin",
+				"type": "String"
+			},
+			{
+				"name": "destination",
+				"type": "String"
+			},
+			{
+				"name": "departureDate",
+				"type": "String"
+			},
+			{
+				"name": "returnDate",
+				"type": "String"
+			},
+			{
+				"name": "total",
+				"type": "String"
+			}
+		]
+	},
+	"type": "Microsoft.DataFactory/factories/datasets"
+}

@@ -1,0 +1,20 @@
+{
+	"name": "powerquery1",
+	"properties": {
+		"type": "WranglingDataFlow",
+		"typeProperties": {
+			"sources": [
+				{
+					"name": "xcsvout",
+					"script": "source(allowSchemaDrift: true,\n\tvalidateSchema: false,\n\tignoreNoFilesFound: false) ~> xcsvout",
+					"dataset": {
+						"referenceName": "xcsvout",
+						"type": "DatasetReference"
+					}
+				}
+			],
+			"script": "section Section1;\r\nshared xcsvout = let AdfDoc = AzureStorage.BlobContents(\"https://amadeusjson.blob.core.windows.net/amaededuscontainer/inputJson/out.csv\"),Csv = Csv.Document(AdfDoc, [Delimiter = \",\", Encoding = TextEncoding.Utf8, QuoteStyle = QuoteStyle.None]), PromotedHeaders = Table.PromoteHeaders(Csv, [PromoteAllScalars = true]) in  PromotedHeaders;\r\nshared UserQuery = let Source = #\"xcsvout\" in Source;\r\nshared #\"UserQuery (2)\" = let Source = #\"xcsvout\",\r\n  #\"Removed other columns\" = Table.SelectColumns(Source, {\"departureDate\"}) in #\"Removed other columns\";\r\n",
+			"documentLocale": "en-us"
+		}
+	}
+}

@@ -1,0 +1,162 @@
+{
+	"name": "getToken",
+	"properties": {
+		"activities": [
+			{
+				"name": "Copy data1",
+				"type": "Copy",
+				"dependsOn": [],
+				"policy": {
+					"timeout": "0.12:00:00",
+					"retry": 0,
+					"retryIntervalInSeconds": 30,
+					"secureOutput": false,
+					"secureInput": false
+				},
+				"userProperties": [],
+				"typeProperties": {
+					"source": {
+						"type": "JsonSource",
+						"storeSettings": {
+							"type": "AzureBlobStorageReadSettings",
+							"recursive": true,
+							"enablePartitionDiscovery": false
+						},
+						"formatSettings": {
+							"type": "JsonReadSettings"
+						}
+					},
+					"sink": {
+						"type": "DelimitedTextSink",
+						"storeSettings": {
+							"type": "AzureBlobStorageWriteSettings"
+						},
+						"formatSettings": {
+							"type": "DelimitedTextWriteSettings",
+							"quoteAllText": true,
+							"fileExtension": ".txt"
+						}
+					},
+					"enableStaging": false,
+					"translator": {
+						"type": "TabularTranslator",
+						"mappings": [
+							{
+								"source": {
+									"path": "['type']"
+								},
+								"sink": {
+									"name": "type",
+									"type": "String"
+								}
+							},
+							{
+								"source": {
+									"path": "['origin']"
+								},
+								"sink": {
+									"name": "origin",
+									"type": "String"
+								}
+							},
+							{
+								"source": {
+									"path": "['destination']"
+								},
+								"sink": {
+									"name": "destination",
+									"type": "String"
+								}
+							},
+							{
+								"source": {
+									"path": "['departureDate']"
+								},
+								"sink": {
+									"name": "departureDate",
+									"type": "Date"
+								}
+							},
+							{
+								"source": {
+									"path": "['returnDate']"
+								},
+								"sink": {
+									"name": "returnDate",
+									"type": "Date"
+								}
+							},
+							{
+								"source": {
+									"path": "['price']['total']"
+								},
+								"sink": {
+									"name": "total",
+									"type": "Double"
+								}
+							}
+						],
+						"collectionReference": "$['data']",
+						"mapComplexValuesToString": true
+					}
+				},
+				"inputs": [
+					{
+						"referenceName": "Json1",
+						"type": "DatasetReference",
+						"parameters": {
+							"pfilename": "key.json"
+						}
+					}
+				],
+				"outputs": [
+					{
+						"referenceName": "xcsvout",
+						"type": "DatasetReference"
+					}
+				]
+			},
+			{
+				"name": "Power Query1",
+				"type": "ExecuteWranglingDataflow",
+				"dependsOn": [],
+				"policy": {
+					"timeout": "0.12:00:00",
+					"retry": 0,
+					"retryIntervalInSeconds": 30,
+					"secureOutput": false,
+					"secureInput": false
+				},
+				"userProperties": [],
+				"typeProperties": {
+					"dataflow": {
+						"referenceName": "powerquery1",
+						"type": "DataFlowReference"
+					},
+					"compute": {
+						"coreCount": 8,
+						"computeType": "General"
+					},
+					"queries": [
+						{
+							"queryName": "UserQuery (2)",
+							"dataflowSinks": [
+								{
+									"name": "UserQuery2xcsvout",
+									"dataset": {
+										"referenceName": "xcsvout",
+										"type": "DatasetReference"
+									},
+									"script": "sink(allowSchemaDrift: true,\n\tvalidateSchema: false,\n\tinput(\n\t\ttype as string,\n\t\torigin as string,\n\t\tdestination as string,\n\t\tdepartureDate as string,\n\t\treturnDate as string,\n\t\ttotal as string\n\t),\n\tskipDuplicateMapInputs: true,\n\tskipDuplicateMapOutputs: true) ~> UserQuery2xcsvout"
+								}
+							]
+						}
+					]
+				}
+			}
+		],
+		"annotations": [],
+		"lastPublishTime": "2024-01-15T12:40:51Z"
+	},
+	"type": "Microsoft.DataFactory/factories/pipelines"
+}

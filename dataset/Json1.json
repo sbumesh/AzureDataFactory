@@ -1,0 +1,162 @@
+{
+	"name": "Json1",
+	"properties": {
+		"linkedServiceName": {
+			"referenceName": "AzureBlobStorage1",
+			"type": "LinkedServiceReference"
+		},
+		"parameters": {
+			"pfilename": {
+				"type": "string",
+				"defaultValue": "key.json"
+			}
+		},
+		"annotations": [],
+		"type": "Json",
+		"typeProperties": {
+			"location": {
+				"type": "AzureBlobStorageLocation",
+				"fileName": {
+					"value": "@dataset().pfilename",
+					"type": "Expression"
+				},
+				"container": "amaededuscontainer"
+			}
+		},
+		"schema": {
+			"type": "object",
+			"properties": {
+				"meta": {
+					"type": "object",
+					"properties": {
+						"count": {
+							"type": "integer"
+						},
+						"links": {
+							"type": "object",
+							"properties": {
+								"self": {
+									"type": "string"
+								}
+							}
+						}
+					}
+				},
+				"data": {
+					"type": "array",
+					"items": {
+						"type": "object",
+						"properties": {
+							"type": {
+								"type": "string"
+							},
+							"scheduledDepartureDate": {
+								"type": "string"
+							},
+							"flightDesignator": {
+								"type": "object",
+								"properties": {
+									"carrierCode": {
+										"type": "string"
+									},
+									"flightNumber": {
+										"type": "integer"
+									}
+								}
+							},
+							"flightPoints": {
+								"type": "array",
+								"items": {
+									"type": "object",
+									"properties": {
+										"iataCode": {
+											"type": "string"
+										},
+										"departure": {
+											"type": "object",
+											"properties": {
+												"timings": {
+													"type": "array",
+													"items": {
+														"type": "object",
+														"properties": {
+															"qualifier": {
+																"type": "string"
+															},
+															"value": {
+																"type": "string"
+															}
+														}
+													}
+												}
+											}
+										}
+									}
+								}
+							},
+							"segments": {
+								"type": "array",
+								"items": {
+									"type": "object",
+									"properties": {
+										"boardPointIataCode": {
+											"type": "string"
+										},
+										"offPointIataCode": {
+											"type": "string"
+										},
+										"scheduledSegmentDuration": {
+											"type": "string"
+										},
+										"partnership": {
+											"type": "object",
+											"properties": {
+												"operatingFlight": {
+													"type": "object",
+													"properties": {
+														"carrierCode": {
+															"type": "string"
+														},
+														"flightNumber": {
+															"type": "integer"
+														}
+													}
+												}
+											}
+										}
+									}
+								}
+							},
+							"legs": {
+								"type": "array",
+								"items": {
+									"type": "object",
+									"properties": {
+										"boardPointIataCode": {
+											"type": "string"
+										},
+										"offPointIataCode": {
+											"type": "string"
+										},
+										"aircraftEquipment": {
+											"type": "object",
+											"properties": {
+												"aircraftType": {
+													"type": "string"
+												}
+											}
+										},
+										"scheduledLegDuration": {
+											"type": "string"
+										}
+									}
+								}
+							}
+						}
+					}
+				}
+			}
+		}
+	},
+	"type": "Microsoft.DataFactory/factories/datasets"
+}
