@@ -1,0 +1,58 @@
+{
+	"name": "salesforcegetjsonToFile",
+	"properties": {
+		"activities": [
+			{
+				"name": "Web1",
+				"type": "WebActivity",
+				"dependsOn": [],
+				"policy": {
+					"timeout": "0.12:00:00",
+					"retry": 0,
+					"retryIntervalInSeconds": 30,
+					"secureOutput": false,
+					"secureInput": false
+				},
+				"userProperties": [],
+				"typeProperties": {
+					"url": {
+						"value": "@pipeline().parameters.url",
+						"type": "Expression"
+					},
+					"method": "POST",
+					"headers": {
+						"Content-Type": "application/x-www-form-urlencoded"
+					},
+					"body": {
+						"value": "@pipeline().parameters.body",
+						"type": "Expression"
+					}
+				}
+			}
+		],
+		"parameters": {
+			"url": {
+				"type": "string",
+				"defaultValue": "https://d5w0000050tsiea2-dev-ed.my.salesforce.com/services/oauth2/token"
+			},
+			"body": {
+				"type": "string",
+				"defaultValue": "grant_type=password&client_id=3MVG95jctIhbyCpo.M5oBPNmMoXIoJEdLTtD9y5UqEWqmzhWCzLySRVZ.SS0Kr12DoRR_3nfxftySKlT0sMnx&client_secret=05393E3026C411587F41159D41D8FD848842A3511555425DD7288DB3D91BB9D3&username=Umesh.Srinivasaiah@sita.aero&password=S@lesForce!9"
+			}
+		},
+		"variables": {
+			"AccessToken": {
+				"type": "String"
+			},
+			"jsonString": {
+				"type": "String"
+			}
+		},
+		"folder": {
+			"name": "salesforce"
+		},
+		"annotations": [],
+		"lastPublishTime": "2024-01-25T01:42:52Z"
+	},
+	"type": "Microsoft.DataFactory/factories/pipelines"
+}

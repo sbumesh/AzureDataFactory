@@ -1,0 +1,18 @@
+{
+	"name": "AmazonAws",
+	"properties": {
+		"linkedServiceName": {
+			"referenceName": "AmazonS31",
+			"type": "LinkedServiceReference"
+		},
+		"annotations": [],
+		"type": "Binary",
+		"typeProperties": {
+			"location": {
+				"type": "AmazonS3Location",
+				"bucketName": "etltalend"
+			}
+		}
+	},
+	"type": "Microsoft.DataFactory/factories/datasets"
+}

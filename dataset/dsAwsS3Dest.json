@@ -1,0 +1,17 @@
+{
+	"name": "dsAwsS3Dest",
+	"properties": {
+		"linkedServiceName": {
+			"referenceName": "AmazonS32Dest",
+			"type": "LinkedServiceReference"
+		},
+		"annotations": [],
+		"type": "Binary",
+		"typeProperties": {
+			"location": {
+				"type": "AmazonS3Location"
+			}
+		}
+	},
+	"type": "Microsoft.DataFactory/factories/datasets"
+}

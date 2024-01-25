@@ -1,0 +1,9 @@
+{
+	"name": "salesforce69",
+	"location": "eastus",
+	"identity": {
+		"type": "SystemAssigned",
+		"principalId": "e71dd7b5-b081-4e37-b231-7b4cf0805779",
+		"tenantId": "fd72a57f-8f25-4477-9caa-8692f415a024"
+	}
+}
