@@ -83,6 +83,13 @@
 				"typeProperties": {
 					"source": {
 						"type": "SalesforceSource",
+						"additionalColumns": [
+							{
+								"name": "extracted",
+								"value": "$$COLUMN:AccountNumber"
+							}
+						],
+						"query": "select Id,Name,Type \nfrom Account",
 						"readBehavior": "query"
 					},
 					"sink": {
