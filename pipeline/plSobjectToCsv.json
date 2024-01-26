@@ -86,7 +86,7 @@
 						"additionalColumns": [
 							{
 								"name": "extracted",
-								"value": "$$COLUMN:AccountNumber"
+								"value": "$$COLUMN:Name"
 							}
 						],
 						"query": "select Id,Name,Type \nfrom Account",
