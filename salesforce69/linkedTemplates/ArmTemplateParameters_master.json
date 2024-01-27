@@ -1,0 +1,78 @@
+{
+	"$schema": "https://schema.management.azure.com/schemas/2015-01-01/deploymentParameters.json#",
+	"contentVersion": "1.0.0.0",
+	"parameters": {
+		"factoryName": {
+			"value": "salesforce69"
+		},
+		"AmazonS31_secretAccessKey": {
+			"value": ""
+		},
+		"AmazonS32Dest_secretAccessKey": {
+			"value": ""
+		},
+		"AzureBlobStorage1_connectionString": {
+			"value": ""
+		},
+		"AzureBlobStorage2_connectionString": {
+			"value": ""
+		},
+		"Salesforce1_password": {
+			"value": ""
+		},
+		"Salesforce1_securityToken": {
+			"value": ""
+		},
+		"Salesforce2_clientSecret": {
+			"value": ""
+		},
+		"SalesforcetoTest_clientSecret": {
+			"value": ""
+		},
+		"linkSalesforce1_password": {
+			"value": ""
+		},
+		"linkSalesforce1_securityToken": {
+			"value": ""
+		},
+		"AmazonS31_properties_typeProperties_accessKeyId": {
+			"value": "AKIARSIREVGQEFR6PC4O"
+		},
+		"AmazonS32Dest_properties_typeProperties_accessKeyId": {
+			"value": "AKIARSIREVGQEFR6PC4O"
+		},
+		"Salesforce1_properties_typeProperties_environmentUrl": {
+			"value": "https://d5w0000050tsiea2-dev-ed.my.salesforce.com"
+		},
+		"Salesforce1_properties_typeProperties_username": {
+			"value": "Umesh.Srinivasaiah@sita.aero"
+		},
+		"Salesforce1_properties_typeProperties_clientId": {
+			"value": "3MVG95jctIhbyCpo.M5oBPNmMoXIoJEdLTtD9y5UqEWqmzhWCzLySRVZ.SS0Kr12DoRR_3nfxftySKlT0sMnx"
+		},
+		"Salesforce2_properties_typeProperties_environmentUrl": {
+			"value": "https://d5w0000050tsiea2-dev-ed.my.salesforce.com"
+		},
+		"Salesforce2_properties_typeProperties_clientId": {
+			"value": "3MVG95jctIhbyCpo.M5oBPNmMoXIoJEdLTtD9y5UqEWqmzhWCzLySRVZ.SS0Kr12DoRR_3nfxftySKlT0sMnx"
+		},
+		"SalesforcetoTest_properties_typeProperties_environmentUrl": {
+			"value": "https://d5w0000050tsiea2-dev-ed.my.salesforce.com/"
+		},
+		"SalesforcetoTest_properties_typeProperties_clientId": {
+			"value": "R1wS6AAR7l2HGFIFbvpGV79YTKYyylgw"
+		},
+		"linkSalesforce1_properties_typeProperties_environmentUrl": {
+			"value": "https://login.salesforce.com"
+		},
+		"linkSalesforce1_properties_typeProperties_username": {
+			"value": "Umesh.Srinivasaiah@sita.aero"
+		},
+		"containerUri": {
+			"value": ""
+		},
+		"containerSasToken": {
+			"value": ""
+		}
+	}
+}
