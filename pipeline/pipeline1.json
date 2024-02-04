@@ -16,6 +16,10 @@
 				"userProperties": [],
 				"typeProperties": {
 					"method": "PUT",
+					"headers": {
+						"x-ms-vers": "2017-11-09",
+						"x-ms-blob-type": "BlockBlob"
+					},
 					"url": {
 						"value": "https://salesforce69.blob.core.windows.net/contsalesforce/key.json/",
 						"type": "Expression"
@@ -23,6 +27,10 @@
 					"body": {
 						"value": "@pipeline().DataFactory",
 						"type": "Expression"
+					},
+					"authentication": {
+						"type": "MSI",
+						"resource": "https://storage.azure.com"
 					}
 				}
 			}
