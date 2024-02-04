@@ -15,13 +15,13 @@
 				},
 				"userProperties": [],
 				"typeProperties": {
-					"method": "PUT",
+					"method": "GET",
 					"headers": {
 						"x-ms-vers": "2017-11-09",
 						"x-ms-blob-type": "BlockBlob"
 					},
 					"url": {
-						"value": "https://salesforce69.blob.core.windows.net/contsalesforce/key.json/",
+						"value": "https://salesforce69.blob.core.windows.net/contsalesforce/token.json",
 						"type": "Expression"
 					},
 					"body": {
