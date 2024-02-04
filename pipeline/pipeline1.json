@@ -15,7 +15,7 @@
 				},
 				"userProperties": [],
 				"typeProperties": {
-					"method": "GET",
+					"method": "PUT",
 					"headers": {
 						"x-ms-vers": "2017-11-09",
 						"x-ms-blob-type": "BlockBlob"
